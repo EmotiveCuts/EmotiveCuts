@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EmotiveCuts | Editing Emotions, Not Just Frames</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;600&display=swap');
+    :root{
+      --gold: #e6b97a;
+      --bg1: #0b0b0b;
+      --bg2: #181212;
+      --muted: rgba(255,255,255,0.07);
+    }
+    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{
+      background: radial-gradient(circle at 15% 10%, #171212 0%, #0b0b0b 40%, #060606 100%);
+      color:#f2f2f2;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:40px 20px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2P8z/C/HwAGgwJ/l1VnJQAAAABJRU5ErkJggg==');
+    }
+    .card{
+      width:100%;
+      max-width:720px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:36px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    header{ text-align:center; margin-bottom:14px; }
+    header img{ width:180px; max-width:55%; height:auto; filter: drop-shadow(0 10px 30px rgba(230,185,122,0.25)); }
+    h1{ font-family:'Playfair Display', serif; color:var(--gold); margin:14px 0 6px; font-size:28px; letter-spacing:1px; }
+    p.tag{ color:#cfcfcf; margin:0 0 18px; font-style:italic; }
+    .about{ color:#d0d0d0; line-height:1.6; max-width:620px; margin:0 auto 22px; }
+    .links{ display:flex; flex-direction:column; gap:14px; align-items:center; margin:10px 0 6px; }
+    .btn{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:90%;
+      max-width:420px;
+      padding:14px 22px;
+      border-radius:999px;
+      border:1px solid var(--gold);
+      color:var(--gold);
+      background: linear-gradient(180deg, rgba(230,185,122,0.02), rgba(230,185,122,0.01));
+      font-weight:600;
+      transition:all .25s ease;
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover{ transform:translateY(-4px); box-shadow:0 10px 30px rgba(230,185,122,0.08); background:var(--gold); color:#0b0b0b; border-color:transparent; }
+    footer{ text-align:center; margin-top:18px; color:#9a9a9a; font-size:13px; border-top:1px solid rgba(255,255,255,0.03); padding-top:18px; }
+    /* music toggle */
+    #musicToggle{ position:fixed; left:18px; bottom:18px; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:1px solid var(--gold); background:rgba(230,185,122,0.06); color:var(--gold); transition:all .18s ease; box-shadow:0 6px 18px rgba(0,0,0,0.45); }
+    #musicToggle.playing{ box-shadow:0 6px 30px rgba(230,185,122,0.18); background:linear-gradient(180deg, rgba(230,185,122,0.08), rgba(230,185,122,0.03)); color:#0b0b0b; }
+    #musicToggle:hover{ transform:scale(1.04); }
+    @media (max-width:520px){
+      body{ padding:28px 14px; }
+      .card{ padding:28px; }
+      .btn{ width:100%; }
+      header img{ width:150px; }
+      h1{ font-size:22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <header>
+      <img src="logo.png" alt="EmotiveCuts logo" />
+      <h1>EmotiveCuts</h1>
+      <p class="tag">Editing Emotions, Not Just Frames.</p>
+    </header>
+
+    <div class="about">
+      <p>We don’t just edit weddings — we tell love stories that live forever. Every frame, every cut, every emotion — crafted to touch your heart.</p>
+    </div>
+
+    <div class="links" aria-label="links">
+      <a class="btn" href="#" onclick="return false;">🎬 Watch Our Latest Wedding Film</a>
+      <a class="btn" href="#" onclick="return false;">💞 View Full Wedding Portfolio</a>
+      <a class="btn" href="#" onclick="return false;">🎥 Book Your Cinematic Wedding Edit</a>
+      <a class="btn" href="#" onclick="return false;">💬 Client Reactions</a>
+      <a class="btn" href="#" onclick="return false;">📸 Follow on Instagram</a>
+    </div>
+
+    <footer>© 2025 EmotiveCuts | Crafted with ❤️ by Chandan</footer>
+  </div>
+
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3fef47b4a3.mp3?filename=soft-piano-emotional-ambient-11089.mp3" type="audio/mpeg">
+    <!-- If you prefer to host audio locally, replace the source with ./music.mp3 -->
+  </audio>
+
+  <div id="musicToggle" title="Mute / Unmute music">🔊</div>
+
+  <script>
+    const bg = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    let isMuted = false;
+    // Start muted if autoplay blocked; we'll try to fade-in quietly if allowed
+    bg.volume = 0;
+    bg.muted = false;
+
+    function fadeInMusic(targetVol=0.12, step=0.01, interval=180){
+      let vol = 0;
+      bg.play().then(()=>{
+        const t = setInterval(()=>{
+          vol += step;
+          if(vol >= targetVol){
+            bg.volume = targetVol;
+            clearInterval(t);
+            btn.classList.add('playing');
+            btn.textContent = '🔊';
+          } else {
+            bg.volume = vol;
+          }
+        }, interval);
+      }).catch((e)=>{
+        // autoplay blocked: keep muted until user interacts
+        bg.muted = true;
+        bg.volume = 0;
+        btn.classList.remove('playing');
+        btn.textContent = '🔈';
+      });
+    }
+    // attempt fade-in on load
+    window.addEventListener('load', ()=> fadeInMusic());
+
+    btn.addEventListener('click', ()=>{
+      if(bg.muted || bg.volume === 0){
+        bg.muted = false;
+        // small fade to target
+        bg.volume = 0.12;
+        btn.classList.add('playing');
+        btn.textContent = '🔊';
+      } else {
+        bg.muted = true;
+        btn.classList.remove('playing');
+        btn.textContent = '🔈';
+      }
+    });
+  </script>
+</body>
+</html>
